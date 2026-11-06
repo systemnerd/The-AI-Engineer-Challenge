@@ -17,6 +17,8 @@ export default function Chat() {
 
   const inputRef = useRef(null);
   const bottomRef = useRef(null);
+  // Lets "New chat" cancel a reply that is still on its way.
+  const pendingRequestRef = useRef(null);
 
   // Keep the latest message, typing indicator or error in view.
   useEffect(() => {
@@ -24,6 +26,8 @@ export default function Chat() {
   }, [messages, isSending, failure]);
 
   async function requestReply(text) {
+    const controller = new AbortController();
+    pendingRequestRef.current = controller;
     setIsSending(true);
     setFailure(null);
 
@@ -32,8 +36,12 @@ export default function Chat() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: text }),
+        signal: controller.signal,
       });
       const data = await response.json().catch(() => ({}));
+
+      // The chat was reset while the body was loading, so drop this reply.
+      if (controller.signal.aborted) return;
 
       if (!response.ok) {
         setFailure({ message: data.error ?? "Something went wrong.", text });
@@ -41,11 +49,24 @@ export default function Chat() {
       }
       setMessages((current) => [...current, { role: "coach", text: data.reply }]);
     } catch {
+      if (controller.signal.aborted) return;
       setFailure({ message: "Can't reach the app. Check your connection.", text });
     } finally {
-      setIsSending(false);
-      inputRef.current?.focus();
+      // After a reset, startNewChat has already cleaned up, and a newer
+      // request may be running that this must not interfere with.
+      if (!controller.signal.aborted) {
+        setIsSending(false);
+        inputRef.current?.focus();
+      }
     }
+  }
+
+  function startNewChat() {
+    pendingRequestRef.current?.abort();
+    setMessages([]);
+    setFailure(null);
+    setIsSending(false);
+    inputRef.current?.focus();
   }
 
   function send(rawText) {
@@ -71,9 +92,20 @@ export default function Chat() {
   return (
     <div className="flex h-dvh flex-col">
       <header className="border-b border-line">
-        <div className="mx-auto flex w-full max-w-2xl items-baseline gap-3 px-4 py-4">
-          <h1 className="font-display text-2xl font-medium">Steady</h1>
-          <p className="text-sm text-muted">Your supportive mental coach</p>
+        <div className="mx-auto flex w-full max-w-2xl items-center justify-between gap-3 px-4 py-4">
+          <div className="flex items-baseline gap-3">
+            <h1 className="font-display text-2xl font-medium">Steady</h1>
+            <p className="hidden text-sm text-muted sm:block">Your supportive mental coach</p>
+          </div>
+          {!isEmpty && (
+            <button
+              type="button"
+              onClick={startNewChat}
+              className="rounded-xl border border-line bg-surface px-3 py-1 text-sm font-medium transition-colors hover:border-accent"
+            >
+              New chat
+            </button>
+          )}
         </div>
       </header>
 

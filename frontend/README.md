@@ -44,6 +44,7 @@ Running the backend somewhere else? Put the variable in `frontend/.env.local`.
 
 - **The coach has a goldfish memory.** The backend handles each message on its own, so it won't recall what you said earlier. The UI says so too.
 - **Enter sends, Shift+Enter adds a new line.**
+- **Fresh start?** Hit **New chat** to clear the screen. Chats aren't saved anywhere, so once it's gone, it's gone.
 - **Light or dark?** Steady follows your system setting.
 
 ## 🛠️ Handy commands
