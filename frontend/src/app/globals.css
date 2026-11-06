@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+/* Warm paper tones by day, soft forest tones by night. Every text and
+   background pair below is chosen to stay easy to read in both themes. */
+:root {
+  --background: #f6f1e7;
+  --surface: #fffdf8;
+  --foreground: #2a2622;
+  --muted: #6b6258;
+  --line: #e2d9c8;
+  --accent: #2f5d50;
+  --on-accent: #ffffff;
+  --danger: #8a2c1a;
+  --danger-soft: #fbe9e4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #171a18;
+    --surface: #212522;
+    --foreground: #ece7dd;
+    --muted: #a8a196;
+    --line: #343a36;
+    --accent: #8fc7b3;
+    --on-accent: #10201a;
+    --danger: #f3b8a8;
+    --danger-soft: #3a211c;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+/* Three pulsing dots while the coach is replying. */
+.typing-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: currentColor;
+  animation: typing-pulse 1.2s ease-in-out infinite;
+}
+
+.typing-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.typing-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes typing-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-dot {
+    animation: none;
+    opacity: 0.6;
+  }
+}
