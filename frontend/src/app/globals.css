@@ -1,31 +1,28 @@
 @import "tailwindcss";
 
 /* Warm paper tones by day, soft forest tones by night. Every text and
-   background pair below is chosen to stay easy to read in both themes. */
+   background pair below is chosen to stay easy to read in both themes.
+   Each light-dark() picks its value from the active color-scheme, so the
+   system setting applies unless the Settings menu sets data-theme. */
 :root {
-  --background: #f6f1e7;
-  --surface: #fffdf8;
-  --foreground: #2a2622;
-  --muted: #6b6258;
-  --line: #e2d9c8;
-  --accent: #2f5d50;
-  --on-accent: #ffffff;
-  --danger: #8a2c1a;
-  --danger-soft: #fbe9e4;
+  color-scheme: light dark;
+  --background: light-dark(#f6f1e7, #171a18);
+  --surface: light-dark(#fffdf8, #212522);
+  --foreground: light-dark(#2a2622, #ece7dd);
+  --muted: light-dark(#6b6258, #a8a196);
+  --line: light-dark(#e2d9c8, #343a36);
+  --accent: light-dark(#2f5d50, #8fc7b3);
+  --on-accent: light-dark(#ffffff, #10201a);
+  --danger: light-dark(#8a2c1a, #f3b8a8);
+  --danger-soft: light-dark(#fbe9e4, #3a211c);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #171a18;
-    --surface: #212522;
-    --foreground: #ece7dd;
-    --muted: #a8a196;
-    --line: #343a36;
-    --accent: #8fc7b3;
-    --on-accent: #10201a;
-    --danger: #f3b8a8;
-    --danger-soft: #3a211c;
-  }
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
 }
 
 @theme inline {

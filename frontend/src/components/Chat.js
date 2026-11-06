@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Settings from "@/components/Settings";
 
 const STARTER_PROMPTS = [
   "I'm feeling overwhelmed today",
@@ -97,15 +98,18 @@ export default function Chat() {
             <h1 className="font-display text-2xl font-medium">Steady</h1>
             <p className="hidden text-sm text-muted sm:block">Your supportive mental coach</p>
           </div>
-          {!isEmpty && (
-            <button
-              type="button"
-              onClick={startNewChat}
-              className="rounded-xl border border-line bg-surface px-3 py-1 text-sm font-medium transition-colors hover:border-accent"
-            >
-              New chat
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {!isEmpty && (
+              <button
+                type="button"
+                onClick={startNewChat}
+                className="rounded-xl border border-line bg-surface px-3 py-1 text-sm font-medium transition-[border-color] hover:border-accent"
+              >
+                New chat
+              </button>
+            )}
+            <Settings />
+          </div>
         </div>
       </header>
 
@@ -129,7 +133,7 @@ export default function Chat() {
                     key={prompt}
                     type="button"
                     onClick={() => send(prompt)}
-                    className="rounded-2xl border border-line bg-surface px-4 py-2 text-left transition-colors hover:border-accent"
+                    className="rounded-2xl border border-line bg-surface px-4 py-2 text-left transition-[border-color] hover:border-accent"
                   >
                     {prompt}
                   </button>

@@ -11,6 +11,12 @@ const displayFont = Fraunces({
   subsets: ["latin"],
 });
 
+// Runs before the first paint so a saved theme never flashes the wrong colors.
+const applySavedTheme = `try {
+  const theme = localStorage.getItem("theme");
+  if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+} catch {}`;
+
 export const metadata = {
   title: "Steady",
   description: "Chat with a supportive mental coach.",
@@ -18,7 +24,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${bodyFont.variable} ${displayFont.variable} antialiased`}>
+    // applySavedTheme can add data-theme before React loads, which is expected.
+    <html
+      lang="en"
+      className={`${bodyFont.variable} ${displayFont.variable} antialiased`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: applySavedTheme }} />
+      </head>
       <body>{children}</body>
     </html>
   );
