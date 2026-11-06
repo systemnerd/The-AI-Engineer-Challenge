@@ -46,6 +46,16 @@ function saveTheme(theme) {
   } catch {}
 }
 
+// Cross-fades the whole page between themes. Browsers without view transitions
+// switch instantly. The timing lives in globals.css.
+function changeTheme(theme) {
+  if (document.startViewTransition) {
+    document.startViewTransition(() => saveTheme(theme));
+  } else {
+    saveTheme(theme);
+  }
+}
+
 export default function Settings() {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useSyncExternalStore(subscribeToTheme, getTheme, getServerTheme);
@@ -114,7 +124,7 @@ export default function Settings() {
                     name="theme"
                     value={value}
                     checked={theme === value}
-                    onChange={() => saveTheme(value)}
+                    onChange={() => changeTheme(value)}
                     className="sr-only"
                   />
                   {label}

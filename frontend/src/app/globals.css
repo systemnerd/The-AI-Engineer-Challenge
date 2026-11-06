@@ -45,6 +45,20 @@ body {
   font-family: var(--font-sans);
 }
 
+/* A slow, gentle cross-fade when the theme changes. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 450ms;
+  animation-timing-function: ease-in-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
+
 /* Three pulsing dots while the coach is replying. */
 .typing-dot {
   width: 0.5rem;
